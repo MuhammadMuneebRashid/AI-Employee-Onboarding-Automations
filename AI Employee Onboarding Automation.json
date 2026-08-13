@@ -1,0 +1,740 @@
+{
+  "name": "My workflow 6",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "bb3e25a6-0a74-443d-89a8-9398882cf62d",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2.1,
+      "position": [
+        0,
+        0
+      ],
+      "id": "126ce34d-1271-4be5-b092-32eac54b78ee",
+      "name": "Webhook",
+      "webhookId": "bb3e25a6-0a74-443d-89a8-9398882cf62d"
+    },
+    {
+      "parameters": {
+        "jsCode": "const fields=$input.first().json.body.data.fields;\nconst field=fields.find(f=>f.label===\"Full Name:\");\nconst name=field.value;\nconst field_2=fields.find(f=>f.label===\"Email:\");\nconst email=field_2.value;\nconst field_3=fields.find(f=>f.label===\"Phone:\");\nconst phone= field_3.value;\nconst field_4=fields.find(f=>f.label===\"Experience:\");\nconst experience=field_4.value;\nconst field_5=fields.find(f=>f.label===\"Position:\");\nconst position=field_5.value;\nconst field_6=fields.find(f=>f.label===\"Joining date:\");\nconst joining_date = field_6.value;\nconst field_7=fields.find(f=>f.label===\"Manager:\");\nconst manager=field_7.value;\nconst field_8=fields.find(f=>f.label===\"Department:\");\nconst value=field_8.value[0];\nconst options=field_8.options.find(o=>o.id===value);\nconst department=options.text;\nconst field_9=fields.find(f=>f.label===\"Job Title:\");\nconst job_title=field_9.value;\nconst field_10=fields.find(f=>f.label===\"Employment Type:\");\nconst value_1=field_10.value[0];\nconst options_1=field_10.options.find(o=>o.id===value_1);\nconst employement_type=options_1.text;\nconst field_11=fields.find(f=>f.label===\"Equipment Required:\");\nconst value_2=field_11.value[0];\nconst options_2=field_11.options.find(o=>o.id===value_2);\nconst equipments_required=options_2.text;\nreturn[{\n  name,\n  email,\n  phone,\n  experience,\n  position,\n  joining_date,\n  manager,\n  department,\n  job_title,\n  employement_type,\n  equipments_required\n  \n}];"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        224,
+        0
+      ],
+      "id": "c4340edf-4b1c-48aa-968c-8a835bf92f51",
+      "name": "Code in JavaScript"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=You are an AI Employee Onboarding Assistant \nyou may check information of the employee \nfind the missing data and mention it \nonboarding the required equipments\nwrite a welcome email to employee\nand an onboarding email to HR\nname{{ $json.name }}email{{ $json.email }}phone{{ $json.phone }}experience{{ $json.experience }}position{{ $json.position }}joing date{{ $json.joining_date }}manager{{ $json.manager }}department{{ $json.department }}title\n{{ $json.job_title }}employment_type{{ $json.employement_type }}equipements required{{ $json.equipments_required }} DONT ADD ANY EXTRA DATA",
+        "hasOutputParser": true,
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 3.1,
+      "position": [
+        448,
+        0
+      ],
+      "id": "0bde354a-86b1-4747-b305-f547139cb2bb",
+      "name": "AI Agent"
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatGoogleGemini",
+      "typeVersion": 1.1,
+      "position": [
+        320,
+        208
+      ],
+      "id": "15e69bff-6d4c-4c0d-9a8f-81000ba1dfd4",
+      "name": "Google Gemini Chat Model",
+      "credentials": {
+        "googlePalmApi": {
+          "id": "0tJPGz6VUqPHVzUT",
+          "name": "Google Gemini(PaLM) Api account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsonSchemaExample": "{\n\t\"name\":\"\",\n  \"email\":\"\",\n  \"phone\":\"\",\n  \"experience\":\"\",\n  \"position\":\"\",\n  \"joining date\":\"\",\n  \"manager\":\"\",\n  \"department\":\"\",\n  \"job title\":\"\",\n  \"employment type\":\"\",\n  \"equipments required\":\"\",\n  \"missing onboarding data\":\"\",\n  \"email to employee subject\":\"\",\n  \"email to employee\":\"\",\n  \"email to HR subject\":\"\",\n  \"email to HR\":\"\"\n  \n}"
+      },
+      "type": "@n8n/n8n-nodes-langchain.outputParserStructured",
+      "typeVersion": 1.3,
+      "position": [
+        624,
+        208
+      ],
+      "id": "",
+      "name": "Structured Output Parser"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "6f8b1810-8b05-47ff-9abb-e7d3d0039ddf",
+              "name": "name",
+              "value": "={{ $json.output.name }}",
+              "type": "string"
+            },
+            {
+              "id": "80322e90-6ee9-4d8b-9600-826649c9b34b",
+              "name": "email",
+              "value": "={{ $json.output.email }}",
+              "type": "string"
+            },
+            {
+              "id": "0b67bf70-cf39-459f-8e40-d519789c7f98",
+              "name": "phone",
+              "value": "={{ $json.output.phone }}",
+              "type": "string"
+            },
+            {
+              "id": "3609061b-1c82-42fd-8197-86a8bf76d761",
+              "name": "experience",
+              "value": "={{ $json.output.experience }}",
+              "type": "string"
+            },
+            {
+              "id": "2beb8454-d209-48ce-a712-7de112c60a05",
+              "name": "position",
+              "value": "={{ $json.output.position }}",
+              "type": "string"
+            },
+            {
+              "id": "b0770d34-7122-47b2-afb9-582af759d107",
+              "name": "joining date",
+              "value": "={{ $json.output['joining date'] }}",
+              "type": "string"
+            },
+            {
+              "id": "d0d52735-7f21-42a1-baee-e517a1255964",
+              "name": "manager",
+              "value": "={{ $json.output.manager }}",
+              "type": "string"
+            },
+            {
+              "id": "d6c0aa1a-5bf7-4ced-8b10-774372bcc522",
+              "name": "department",
+              "value": "={{ $json.output.department }}",
+              "type": "string"
+            },
+            {
+              "id": "1353ae1b-6183-4540-b989-584c4e5f8b85",
+              "name": "job title",
+              "value": "={{ $json.output['job title'] }}",
+              "type": "string"
+            },
+            {
+              "id": "c4f0d237-a126-4463-95ee-577cf16e1296",
+              "name": "employment type",
+              "value": "={{ $json.output['employment type'] }}",
+              "type": "string"
+            },
+            {
+              "id": "6a793ef8-9f75-40cb-a3ba-074f7b6df592",
+              "name": "equipments required",
+              "value": "={{ $json.output['equipments required'] }}",
+              "type": "string"
+            },
+            {
+              "id": "59384a2b-3462-4b12-a914-5fe88e156bc9",
+              "name": "missing onboarding data",
+              "value": "={{ $json.output['missing onboarding data'] }}",
+              "type": "string"
+            },
+            {
+              "id": "bbb4c216-abf8-4d7c-b9b8-73a251302e88",
+              "name": "email to employee subject",
+              "value": "={{ $json.output['email to employee subject'] }}",
+              "type": "string"
+            },
+            {
+              "id": "abd6e2ad-2a8f-42fd-b95b-cf3150ebb22c",
+              "name": "email to employee",
+              "value": "={{ $json.output['email to employee'] }}",
+              "type": "string"
+            },
+            {
+              "id": "4f32b30c-ae8f-4e5a-8d48-557150ee7cf8",
+              "name": "email to HR subject",
+              "value": "={{ $json.output['email to HR subject'] }}",
+              "type": "string"
+            },
+            {
+              "id": "b46beecf-d954-4ce2-9170-20054c82b32c",
+              "name": "email to HR",
+              "value": "={{ $json.output['email to HR'] }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.5,
+      "position": [
+        816,
+        0
+      ],
+      "id": "a98930f2-a087-4620-b6de-dcec6b272aea",
+      "name": "Edit Fields"
+    },
+    {
+      "parameters": {
+        "operation": "append",
+        "documentId": {
+          "__rl": true,
+          "value": "1dtpOpxPgpT9bVHMAoVaoimRJBKdlFYFJ4a8UJOlzlCY",
+          "mode": "list",
+          "cachedResultName": "webhook leads",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1dtpOpxPgpT9bVHMAoVaoimRJBKdlFYFJ4a8UJOlzlCY/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Sheet1",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1dtpOpxPgpT9bVHMAoVaoimRJBKdlFYFJ4a8UJOlzlCY/edit#gid=0"
+        },
+        "columns": {
+          "mappingMode": "autoMapInputData",
+          "value": {},
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "name",
+              "displayName": "name",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "email",
+              "displayName": "email",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "company",
+              "displayName": "company",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Country",
+              "displayName": "Country",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "budget",
+              "displayName": "budget",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "industry",
+              "displayName": "industry",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "category",
+              "displayName": "category",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "score",
+              "displayName": "score",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "customer_email_subject",
+              "displayName": "customer_email_subject",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Customer_email",
+              "displayName": "Customer_email",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Admin_email_subject",
+              "displayName": "Admin_email_subject",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Admin_email",
+              "displayName": "Admin_email",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "output",
+              "displayName": "output",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "company name",
+              "displayName": "company name",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "issue",
+              "displayName": "issue",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "contact method",
+              "displayName": "contact method",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "priority",
+              "displayName": "priority",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "customers_email_subject",
+              "displayName": "customers_email_subject",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "customers_email",
+              "displayName": "customers_email",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "support_team_email_subject",
+              "displayName": "support_team_email_subject",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "support_team_email",
+              "displayName": "support_team_email",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "phone",
+              "displayName": "phone",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "experience",
+              "displayName": "experience",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "position",
+              "displayName": "position",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "joining date",
+              "displayName": "joining date",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "manager",
+              "displayName": "manager",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "department",
+              "displayName": "department",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "job title",
+              "displayName": "job title",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "employment type",
+              "displayName": "employment type",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "equipments required",
+              "displayName": "equipments required",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "missing onboarding data",
+              "displayName": "missing onboarding data",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "email to employee subject",
+              "displayName": "email to employee subject",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "email to employee",
+              "displayName": "email to employee",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "email to HR subject",
+              "displayName": "email to HR subject",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "email to HR",
+              "displayName": "email to HR",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        1040,
+        0
+      ],
+      "id": "",
+      "name": "Append row in sheet",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "FIWRo1eMtpGSnH4g",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "sendTo": "muneeb00rashid@gmail.com",
+        "subject": "={{ $json['email to HR subject'] }}",
+        "emailType": "text",
+        "message": "={{ $json['email to HR'] }}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.2,
+      "position": [
+        1312,
+        128
+      ],
+      "id": "",
+      "name": "Send a message",
+      "webhookId": "2a0ade9a-57f2-4351-8983-0e7a4d569fb7",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "c6AdwRpnGyQWTxo6",
+          "name": "Gmail account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "sendTo": "={{ $json.email }}",
+        "subject": "={{ $json['email to employee subject'] }}",
+        "emailType": "text",
+        "message": "={{ $json['email to employee'] }}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.2,
+      "position": [
+        1312,
+        -128
+      ],
+      "id": "",
+      "name": "Send a message1",
+      "webhookId": "",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "",
+          "name": "Gmail account"
+        }
+      }
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Webhook": {
+      "main": [
+        [
+          {
+            "node": "Code in JavaScript",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code in JavaScript": {
+      "main": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Google Gemini Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Structured Output Parser": {
+      "ai_outputParser": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_outputParser",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "AI Agent": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Edit Fields": {
+      "main": [
+        [
+          {
+            "node": "Append row in sheet",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Append row in sheet": {
+      "main": [
+        [
+          {
+            "node": "Send a message1",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Send a message",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Send a message1": {
+      "main": [
+        []
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate",
+    "availableInMCP": false
+  },
+  "versionId": "eb9709b5-6caf-4c7c-9050-e06d801b1c9c",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "1f0ec545d1bf74e46420201803c53c0fe4b4d8ea61cf08679c7f425a8423d67f"
+  },
+  "nodeGroups": [],
+  "id": "wbqY635eNYk4sHpD",
+  "tags": []
+}
