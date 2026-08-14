@@ -338,6 +338,8 @@ Project Author
 
 Muneeb
 
+<img width="1920" height="1080" alt="employee onboarding " src="https://github.com/user-attachments/assets/b1394710-c331-4986-bcb8-89488457df05" />
+
 AI Automation Developer
 
 License
